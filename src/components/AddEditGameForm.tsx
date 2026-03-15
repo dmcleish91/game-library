@@ -3,37 +3,17 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Star } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const PLATFORMS = [
-  'PC',
-  'NES',
-  'SNES',
-  'N64',
-  'GameCube',
-  'Wii',
-  'Wii U',
-  'Switch',
-  'Master System',
-  'Genesis',
-  'Saturn',
-  'Dreamcast',
-  'PlayStation',
-  'PS2',
-  'PS3',
-  'PS4',
-  'PS5',
-  'Xbox',
-  'Xbox 360',
-  'Xbox One',
-  'Xbox Series X',
-  'Xbox Series S',
-  'TurboGrafx-16',
-  '3DO',
-  'Other',
+const PLATFORM_GROUPS: { label: string; platforms: string[] }[] = [
+  { label: 'Nintendo', platforms: ['NES', 'SNES', 'N64', 'GameCube', 'Wii', 'Wii U', 'Switch'] },
+  { label: 'Sega', platforms: ['Master System', 'Genesis', 'Saturn', 'Dreamcast'] },
+  { label: 'Sony', platforms: ['PlayStation', 'PS2', 'PS3', 'PS4', 'PS5'] },
+  { label: 'Microsoft', platforms: ['Xbox', 'Xbox 360', 'Xbox One', 'Xbox Series X', 'Xbox Series S'] },
+  { label: 'PC & other', platforms: ['PC', 'TurboGrafx-16', '3DO', 'Other'] },
 ];
 
 type AddEditGameFormProps = {
@@ -112,10 +92,15 @@ export function AddEditGameForm({ game, statusOptions, onSave, onCancel }: AddEd
             <SelectValue placeholder='Select platform' />
           </SelectTrigger>
           <SelectContent>
-            {PLATFORMS.map((p) => (
-              <SelectItem key={p} value={p}>
-                {p}
-              </SelectItem>
+            {PLATFORM_GROUPS.map((group) => (
+              <SelectGroup key={group.label}>
+                <SelectLabel className='text-muted-foreground'>{group.label}</SelectLabel>
+                {group.platforms.map((p) => (
+                  <SelectItem key={p} value={p}>
+                    {p}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
             ))}
           </SelectContent>
         </Select>
