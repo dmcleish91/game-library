@@ -54,7 +54,6 @@ export function AddEditGameForm({ game, statusOptions, onSave, onCancel }: AddEd
   const [status, setStatus] = useState<GameStatus>(GAME_STATUS.BACKLOG);
   const [rating, setRating] = useState(0);
   const [notes, setNotes] = useState('');
-  const [purchaseDate, setPurchaseDate] = useState('');
 
   useEffect(() => {
     if (game) {
@@ -63,14 +62,12 @@ export function AddEditGameForm({ game, statusOptions, onSave, onCancel }: AddEd
       setStatus(game.status);
       setRating(game.rating);
       setNotes(game.notes);
-      setPurchaseDate(game.purchaseDate);
     } else {
       setTitle('');
       setPlatform('');
       setStatus(GAME_STATUS.BACKLOG);
       setRating(0);
       setNotes('');
-      setPurchaseDate('');
     }
   }, [game]);
 
@@ -78,16 +75,16 @@ export function AddEditGameForm({ game, statusOptions, onSave, onCancel }: AddEd
     e.preventDefault();
     if (!title.trim() || !platform) return;
     if (isEdit && game) {
-      onSave({ ...game, title, platform, status, rating, notes, purchaseDate });
+      onSave({ ...game, title, platform, status, rating, notes });
     } else {
-      onSave(createGame({ title, platform, status, rating, notes, purchaseDate }));
+      onSave(createGame({ title, platform, status, rating, notes }));
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className='flex flex-col gap-5'>
+    <form onSubmit={handleSubmit} className='flex min-w-0 flex-col gap-5 px-3'>
       <div className='space-y-2'>
-        <Label htmlFor='title' className='text-sm text-foreground'>
+        <Label htmlFor='title' className='inline-block w-fit text-sm text-foreground'>
           Game Title
         </Label>
         <Input
@@ -102,7 +99,7 @@ export function AddEditGameForm({ game, statusOptions, onSave, onCancel }: AddEd
       </div>
 
       <div className='space-y-2'>
-        <Label htmlFor='platform' className='text-sm text-foreground'>
+        <Label htmlFor='platform' className='inline-block w-fit text-sm text-foreground'>
           Platform
         </Label>
         <Select value={platform || null} onValueChange={(v) => setPlatform(v ?? '')}>
@@ -125,7 +122,7 @@ export function AddEditGameForm({ game, statusOptions, onSave, onCancel }: AddEd
       </div>
 
       <div className='space-y-2'>
-        <Label htmlFor='status' className='text-sm text-foreground'>
+        <Label htmlFor='status' className='inline-block w-fit text-sm text-foreground'>
           Status
         </Label>
         <Select value={status} onValueChange={(v) => setStatus((v ?? status) as GameStatus)}>
@@ -150,7 +147,7 @@ export function AddEditGameForm({ game, statusOptions, onSave, onCancel }: AddEd
       </div>
 
       <div className='space-y-2'>
-        <Label className='text-sm text-foreground'>Rating</Label>
+        <Label className='inline-block w-fit text-sm text-foreground'>Rating</Label>
         <div className='flex gap-2'>
           {[1, 2, 3, 4, 5].map((star) => (
             <button
@@ -166,7 +163,7 @@ export function AddEditGameForm({ game, statusOptions, onSave, onCancel }: AddEd
       </div>
 
       <div className='space-y-2'>
-        <Label htmlFor='notes' className='text-sm text-foreground'>
+        <Label htmlFor='notes' className='inline-block w-fit text-sm text-foreground'>
           Notes
         </Label>
         <Textarea
@@ -177,19 +174,6 @@ export function AddEditGameForm({ game, statusOptions, onSave, onCancel }: AddEd
           className={cn(
             'min-h-24 w-full resize-none rounded-xl border border-border bg-input px-3 py-2 text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 outline-none',
           )}
-        />
-      </div>
-
-      <div className='space-y-2'>
-        <Label htmlFor='purchaseDate' className='text-sm text-foreground'>
-          Purchase date
-        </Label>
-        <Input
-          id='purchaseDate'
-          type='date'
-          value={purchaseDate}
-          onChange={(e) => setPurchaseDate(e.target.value)}
-          className={fieldClass}
         />
       </div>
 

@@ -21,7 +21,6 @@ export interface Game {
   status: GameStatus;
   rating: number;
   notes: string;
-  purchaseDate: string;
 }
 
 export const DEFAULT_GAME: Omit<Game, 'id'> & { id: '' } = {
@@ -31,7 +30,6 @@ export const DEFAULT_GAME: Omit<Game, 'id'> & { id: '' } = {
   status: GAME_STATUS.BACKLOG,
   rating: 0,
   notes: '',
-  purchaseDate: '',
 };
 
 export function createGame(overrides: Partial<Game> = {}): Game {

@@ -86,7 +86,7 @@ function App() {
               {editingGame ? 'Edit Game' : 'Add Game'}
             </SheetTitle>
           </SheetHeader>
-          <div className="overflow-y-auto">
+          <div className="min-w-0 overflow-y-auto overflow-x-hidden">
             <AddEditGameForm
               game={editingGame}
               statusOptions={STATUS_OPTIONS}
