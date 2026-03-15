@@ -1,14 +1,134 @@
+import { useState } from 'react';
 import type { Game } from '@/lib/gameModel';
-import { GAME_STATUS } from '@/lib/gameModel';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { GAME_STATUS, type GameStatus } from '@/lib/gameModel';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreHorizontal, Star, Pencil, Trash2 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { Gamepad2, MoreHorizontal, Star, Pencil, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+const statusConfig: Record<GameStatus, { label: string; className: string }> = {
+  [GAME_STATUS.BACKLOG]: {
+    label: 'Backlog',
+    className: 'bg-secondary text-secondary-foreground',
+  },
+  [GAME_STATUS.PLAYING]: {
+    label: 'Playing',
+    className: 'bg-primary/20 text-primary',
+  },
+  [GAME_STATUS.COMPLETED]: {
+    label: 'Completed',
+    className: 'bg-primary text-primary-foreground',
+  },
+  [GAME_STATUS.DROPPED]: {
+    label: 'Dropped',
+    className: 'bg-destructive/20 text-destructive',
+  },
+};
+
+type GameCardProps = {
+  game: Game;
+  onEdit: (game: Game) => void;
+  onDelete: (id: string) => void;
+};
+
+function GameCard({ game, onEdit, onDelete }: GameCardProps) {
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const status = statusConfig[game.status];
+
+  return (
+    <>
+      <div className="group relative overflow-hidden rounded-2xl bg-card p-4 transition-all active:scale-[0.98]">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <h3 className="truncate text-base font-semibold text-foreground">
+              {game.title}
+            </h3>
+            <p className="mt-0.5 text-sm text-muted-foreground">{game.platform}</p>
+          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground hover:bg-accent hover:text-foreground"
+              aria-label="Open menu"
+            >
+              <MoreHorizontal className="h-4 w-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuItem onClick={() => onEdit(game)}>
+                <Pencil className="mr-2 h-4 w-4" />
+                Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setShowDeleteDialog(true)}
+                className="text-destructive focus:text-destructive"
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+
+        <div className="mt-3 flex items-center gap-2">
+          <span
+            className={cn(
+              'rounded-full px-2.5 py-1 text-xs font-medium',
+              status.className
+            )}
+          >
+            {status.label}
+          </span>
+          {game.rating > 0 && (
+            <div className="flex items-center gap-1 text-primary">
+              <Star className="h-3.5 w-3.5 fill-current" />
+              <span className="text-xs font-medium">{game.rating}</span>
+            </div>
+          )}
+        </div>
+
+        {game.notes && (
+          <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">
+            {game.notes}
+          </p>
+        )}
+      </div>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent className="max-w-sm">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete game?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently remove &quot;{game.title}&quot; from your
+              library.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => onDelete(game.id)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+}
 
 type GameListProps = {
   games: Game[];
@@ -16,82 +136,33 @@ type GameListProps = {
   onRemove: (id: string) => void;
 };
 
-function StatusBadge({ status }: { status: Game['status'] }) {
-  const isHighlight = status === GAME_STATUS.PLAYING || status === GAME_STATUS.COMPLETED;
-  const label =
-    status === GAME_STATUS.COMPLETED
-      ? 'Completed'
-      : status.charAt(0).toUpperCase() + status.slice(1);
-  return (
-    <span
-      className={cn(
-        'inline-flex shrink-0 items-center rounded-md px-2 py-0.5 text-xs font-medium',
-        isHighlight
-          ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400'
-          : 'bg-muted text-muted-foreground'
-      )}
-    >
-      {label}
-    </span>
-  );
-}
-
 export function GameList({ games, onEdit, onRemove }: GameListProps) {
   if (games.length === 0) {
     return (
-      <p className="py-8 text-center text-muted-foreground">No games in your library.</p>
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-card">
+          <Gamepad2 className="h-8 w-8 text-muted-foreground" />
+        </div>
+        <h3 className="mb-1 text-lg font-medium text-foreground">
+          No games found
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          Add your first game to start tracking
+        </p>
+      </div>
     );
   }
 
   return (
-    <ul className="space-y-3">
+    <div className="flex flex-col gap-3">
       {games.map((game) => (
-        <li key={game.id}>
-          <Card className="overflow-hidden">
-            <CardHeader className="flex flex-row items-start justify-between gap-2 pb-2">
-              <div className="min-w-0 flex-1">
-                <h3 className="truncate font-semibold text-foreground">{game.title}</h3>
-                <p className="text-sm text-muted-foreground">{game.platform}</p>
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  className="inline-flex size-8 shrink-0 items-center justify-center rounded-lg border-0 bg-transparent hover:bg-accent hover:text-accent-foreground"
-                  aria-label="Options"
-                >
-                  <MoreHorizontal className="size-4" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => onEdit(game)}>
-                    <Pencil className="mr-2 size-4" />
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => onRemove(game.id)}
-                    className="text-destructive focus:text-destructive"
-                  >
-                    <Trash2 className="mr-2 size-4" />
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </CardHeader>
-            <CardContent className="space-y-1.5 pt-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <StatusBadge status={game.status} />
-                {game.rating > 0 && (
-                  <span className="flex items-center gap-1 text-sm text-emerald-600 dark:text-emerald-400">
-                    <Star className="size-4 fill-current" />
-                    {game.rating}
-                  </span>
-                )}
-              </div>
-              {game.notes ? (
-                <p className="text-sm text-muted-foreground">{game.notes}</p>
-              ) : null}
-            </CardContent>
-          </Card>
-        </li>
+        <GameCard
+          key={game.id}
+          game={game}
+          onEdit={() => onEdit(game)}
+          onDelete={() => onRemove(game.id)}
+        />
       ))}
-    </ul>
+    </div>
   );
 }
