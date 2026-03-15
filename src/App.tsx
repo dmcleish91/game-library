@@ -5,20 +5,20 @@ import { SearchBox } from './components/SearchBox';
 import { GameTabs } from './components/GameTabs';
 import { AddEditGameForm } from './components/AddEditGameForm';
 import { GameList } from './components/GameList';
-import { Game, GAME_STATUS, type GameStatus } from './lib/gameModel';
+import { Game, GAME_STATUS, STATUS_OPTIONS, type GameStatus } from './lib/gameModel';
 import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from './components/ui/drawer';
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from './components/ui/sheet';
 
 function App() {
   const { games, addGame, updateGame, removeGame } = useGameLibrary();
   const [editingGame, setEditingGame] = useState<Game | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | GameStatus>('all');
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   const filteredBySearch = games.filter((e) => {
     const q = searchQuery.trim().toLowerCase();
@@ -46,54 +46,58 @@ function App() {
     } else {
       addGame(game);
     }
-    setDrawerOpen(false);
+    setSheetOpen(false);
   }
 
   function handleCancel() {
     setEditingGame(null);
-    setDrawerOpen(false);
+    setSheetOpen(false);
   }
 
   function handleEdit(game: Game) {
     setEditingGame(game);
-    setDrawerOpen(true);
+    setSheetOpen(true);
   }
 
   function handleAddClick() {
     setEditingGame(null);
-    setDrawerOpen(true);
+    setSheetOpen(true);
   }
 
   return (
     <div className="flex min-h-svh flex-col bg-background">
-      <div className="mx-auto w-full max-w-4xl px-4 sm:px-6">
+      <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl">
         <GameHeader onAddClick={handleAddClick} />
       </div>
-      <Drawer
-        open={drawerOpen}
+      <Sheet
+        open={sheetOpen}
         onOpenChange={(open) => {
-          setDrawerOpen(open);
+          setSheetOpen(open);
           if (!open) setEditingGame(null);
         }}
-        direction="bottom"
       >
-        <DrawerContent className="h-[85vh] rounded-t-3xl border-t bg-card px-4 pb-8">
-          <DrawerHeader className="pb-4">
-            <DrawerTitle className="text-foreground">
+        <SheetContent
+          side="bottom"
+          showCloseButton={false}
+          className="h-[85vh] rounded-t-3xl border-t bg-card px-4 pb-8"
+        >
+          <SheetHeader className="pb-4">
+            <SheetTitle className="text-foreground">
               {editingGame ? 'Edit Game' : 'Add Game'}
-            </DrawerTitle>
-          </DrawerHeader>
+            </SheetTitle>
+          </SheetHeader>
           <div className="overflow-y-auto">
             <AddEditGameForm
               game={editingGame}
+              statusOptions={STATUS_OPTIONS}
               onSave={handleSave}
               onCancel={handleCancel}
             />
           </div>
-        </DrawerContent>
-      </Drawer>
+        </SheetContent>
+      </Sheet>
       <main className="flex-1 py-6 pb-8 sm:py-8 sm:pb-12">
-        <div className="mx-auto flex max-w-4xl flex-col gap-5 px-4 sm:px-6">
+        <div className="mx-auto flex w-full max-w-4xl flex-col gap-5 px-4 sm:px-6 lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl">
           <SearchBox value={searchQuery} onChange={setSearchQuery} />
           <GameTabs
             activeTab={statusFilter}

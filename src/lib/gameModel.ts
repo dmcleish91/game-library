@@ -1,11 +1,18 @@
 export const GAME_STATUS = {
-  PLAYING: 'playing',
-  COMPLETED: 'completed',
-  BACKLOG: 'backlog',
-  DROPPED: 'dropped',
+  PLAYING: 'Playing',
+  COMPLETED: 'Completed',
+  BACKLOG: 'Backlog',
+  DROPPED: 'Dropped',
 } as const;
 
 export type GameStatus = (typeof GAME_STATUS)[keyof typeof GAME_STATUS];
+
+export const STATUS_OPTIONS: { value: GameStatus; label: string }[] = [
+  { value: GAME_STATUS.BACKLOG, label: 'Backlog' },
+  { value: GAME_STATUS.PLAYING, label: 'Playing' },
+  { value: GAME_STATUS.COMPLETED, label: 'Completed' },
+  { value: GAME_STATUS.DROPPED, label: 'Dropped' },
+];
 
 export interface Game {
   id: string;

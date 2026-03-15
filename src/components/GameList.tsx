@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import type { Game } from '@/lib/gameModel';
 import { GAME_STATUS, type GameStatus } from '@/lib/gameModel';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,76 +46,55 @@ function GameCard({ game, onEdit, onDelete }: GameCardProps) {
 
   return (
     <>
-      <div className="group relative overflow-hidden rounded-2xl bg-card p-4 transition-all active:scale-[0.98]">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <h3 className="truncate text-base font-semibold text-foreground">
-              {game.title}
-            </h3>
-            <p className="mt-0.5 text-sm text-muted-foreground">{game.platform}</p>
+      <div className='group relative overflow-hidden rounded-2xl bg-card p-4 transition-all active:scale-[0.98]'>
+        <div className='flex items-start justify-between gap-3'>
+          <div className='min-w-0 flex-1'>
+            <h3 className='truncate text-base font-semibold text-foreground'>{game.title}</h3>
+            <p className='mt-0.5 text-sm text-muted-foreground'>{game.platform}</p>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger
-              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground hover:bg-accent hover:text-foreground"
-              aria-label="Open menu"
-            >
-              <MoreHorizontal className="h-4 w-4" />
+              className='inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground hover:bg-accent hover:text-foreground'
+              aria-label='Open menu'>
+              <MoreHorizontal className='h-4 w-4' />
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
+            <DropdownMenuContent align='end' className='w-40'>
               <DropdownMenuItem onClick={() => onEdit(game)}>
-                <Pencil className="mr-2 h-4 w-4" />
+                <Pencil className='mr-2 h-4 w-4' />
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => setShowDeleteDialog(true)}
-                className="text-destructive focus:text-destructive"
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
+              <DropdownMenuItem onClick={() => setShowDeleteDialog(true)} className='text-destructive focus:text-destructive'>
+                <Trash2 className='mr-2 h-4 w-4' />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
 
-        <div className="mt-3 flex items-center gap-2">
-          <span
-            className={cn(
-              'rounded-full px-2.5 py-1 text-xs font-medium',
-              status.className
-            )}
-          >
-            {status.label}
-          </span>
+        <div className='mt-3 flex items-center gap-2'>
+          <span className={cn('rounded-full px-2.5 py-1 text-xs font-medium', status.className)}>{status.label}</span>
           {game.rating > 0 && (
-            <div className="flex items-center gap-1 text-primary">
-              <Star className="h-3.5 w-3.5 fill-current" />
-              <span className="text-xs font-medium">{game.rating}</span>
+            <div className='flex items-center gap-1 text-primary'>
+              <Star className='h-3.5 w-3.5 fill-current' />
+              <span className='text-xs font-medium'>{game.rating}</span>
             </div>
           )}
         </div>
 
-        {game.notes && (
-          <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">
-            {game.notes}
-          </p>
-        )}
+        {game.notes && <p className='mt-3 line-clamp-2 text-sm text-muted-foreground'>{game.notes}</p>}
       </div>
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent className="max-w-sm">
+        <AlertDialogContent className='max-w-sm'>
           <AlertDialogHeader>
             <AlertDialogTitle>Delete game?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently remove &quot;{game.title}&quot; from your
-              library.
-            </AlertDialogDescription>
+            <AlertDialogDescription>This will permanently remove &quot;{game.title}&quot; from your library.</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => onDelete(game.id)}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
+              className='bg-destructive text-destructive-foreground hover:bg-destructive/90'>
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -139,29 +113,20 @@ type GameListProps = {
 export function GameList({ games, onEdit, onRemove }: GameListProps) {
   if (games.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-card">
-          <Gamepad2 className="h-8 w-8 text-muted-foreground" />
+      <div className='flex flex-col items-center justify-center py-16 text-center'>
+        <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-card'>
+          <Gamepad2 className='h-8 w-8 text-muted-foreground' />
         </div>
-        <h3 className="mb-1 text-lg font-medium text-foreground">
-          No games found
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          Add your first game to start tracking
-        </p>
+        <h3 className='mb-1 text-lg font-medium text-foreground'>No games found</h3>
+        <p className='text-sm text-muted-foreground'>Add your first game to start tracking</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className='flex flex-col gap-3'>
       {games.map((game) => (
-        <GameCard
-          key={game.id}
-          game={game}
-          onEdit={() => onEdit(game)}
-          onDelete={() => onRemove(game.id)}
-        />
+        <GameCard key={game.id} game={game} onEdit={() => onEdit(game)} onDelete={() => onRemove(game.id)} />
       ))}
     </div>
   );
