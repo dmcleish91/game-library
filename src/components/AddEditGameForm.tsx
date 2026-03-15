@@ -2,7 +2,6 @@ import { createGame, Game, GAME_STATUS, GameStatus } from '@/lib/gameModel';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 
@@ -57,73 +56,65 @@ export function AddEditGameForm({ game, onSave, onCancel }: AddEditGameFormProps
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
-        <Input
-          id="title"
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="platform">Platform</Label>
-        <Input
-          id="platform"
-          type="text"
-          value={platform}
-          onChange={(e) => setPlatform(e.target.value)}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="status">Status</Label>
-        <select
-          id="status"
-          value={status}
-          onChange={(e) => setStatus(e.target.value as GameStatus)}
-          className={cn(
-            'flex h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none',
-            'focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
-          )}
-        >
-          {STATUS_OPTIONS.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="rating">Rating (0–5)</Label>
-        <Input
-          id="rating"
-          type="number"
-          min={0}
-          max={5}
-          value={rating}
-          onChange={(e) => setRating(Number(e.target.value))}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="notes">Notes</Label>
-        <Textarea
-          id="notes"
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-        />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="purchaseDate">Purchase date</Label>
-        <Input
-          id="purchaseDate"
-          type="date"
-          value={purchaseDate}
-          onChange={(e) => setPurchaseDate(e.target.value)}
-        />
-      </div>
-      <div className="flex gap-2">
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <Input
+        id="title"
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Title"
+        aria-label="Title"
+        required
+      />
+      <Input
+        id="platform"
+        type="text"
+        value={platform}
+        onChange={(e) => setPlatform(e.target.value)}
+        placeholder="Platform (e.g. PC, Switch, PS5)"
+        aria-label="Platform"
+      />
+      <select
+        id="status"
+        value={status}
+        onChange={(e) => setStatus(e.target.value as GameStatus)}
+        aria-label="Status"
+        className={cn(
+          'flex h-8 w-full appearance-none rounded-lg border border-input bg-background px-2.5 py-1 text-sm outline-none',
+          'focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
+        )}
+      >
+        {STATUS_OPTIONS.map((s) => (
+          <option key={s} value={s}>
+            {s}
+          </option>
+        ))}
+      </select>
+      <Input
+        id="rating"
+        type="number"
+        min={0}
+        max={5}
+        value={rating}
+        onChange={(e) => setRating(Number(e.target.value))}
+        placeholder="Rating (0–5)"
+        aria-label="Rating 0 to 5"
+      />
+      <Textarea
+        id="notes"
+        value={notes}
+        onChange={(e) => setNotes(e.target.value)}
+        placeholder="Notes"
+        aria-label="Notes"
+      />
+      <Input
+        id="purchaseDate"
+        type="date"
+        value={purchaseDate}
+        onChange={(e) => setPurchaseDate(e.target.value)}
+        aria-label="Purchase date"
+      />
+      <div className="flex gap-2 pt-1">
         <Button type="submit">{isEdit ? 'Save' : 'Add game'}</Button>
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
