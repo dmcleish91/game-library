@@ -1,5 +1,10 @@
 import { createGame, Game, GAME_STATUS, GameStatus } from '@/lib/gameModel';
 import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 
 type AddEditGameFormProps = {
   game: Game | null;
@@ -7,7 +12,12 @@ type AddEditGameFormProps = {
   onCancel?: () => void;
 };
 
-const STATUS_OPTIONS: GameStatus[] = [GAME_STATUS.BACKLOG, GAME_STATUS.PLAYING, GAME_STATUS.COMPLETED, GAME_STATUS.DROPPED];
+const STATUS_OPTIONS: GameStatus[] = [
+  GAME_STATUS.BACKLOG,
+  GAME_STATUS.PLAYING,
+  GAME_STATUS.COMPLETED,
+  GAME_STATUS.DROPPED,
+];
 
 export function AddEditGameForm({ game, onSave, onCancel }: AddEditGameFormProps) {
   const isEdit = game != null;
@@ -47,18 +57,37 @@ export function AddEditGameForm({ game, onSave, onCancel }: AddEditGameFormProps
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor='title'>Title</label>
-        <input id='title' type='text' value={title} onChange={(e) => setTitle(e.target.value)} required />
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="title">Title</Label>
+        <Input
+          id="title"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
       </div>
-      <div>
-        <label htmlFor='platform'>Platform</label>
-        <input id='platform' type='text' value={platform} onChange={(e) => setPlatform(e.target.value)} />
+      <div className="space-y-2">
+        <Label htmlFor="platform">Platform</Label>
+        <Input
+          id="platform"
+          type="text"
+          value={platform}
+          onChange={(e) => setPlatform(e.target.value)}
+        />
       </div>
-      <div>
-        <label htmlFor='status'>Status</label>
-        <select id='status' value={status} onChange={(e) => setStatus(e.target.value as GameStatus)}>
+      <div className="space-y-2">
+        <Label htmlFor="status">Status</Label>
+        <select
+          id="status"
+          value={status}
+          onChange={(e) => setStatus(e.target.value as GameStatus)}
+          className={cn(
+            'flex h-8 w-full rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none',
+            'focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50'
+          )}
+        >
           {STATUS_OPTIONS.map((s) => (
             <option key={s} value={s}>
               {s}
@@ -66,24 +95,42 @@ export function AddEditGameForm({ game, onSave, onCancel }: AddEditGameFormProps
           ))}
         </select>
       </div>
-      <div>
-        <label htmlFor='rating'>Rating (0–5)</label>
-        <input id='rating' type='number' min={0} max={5} value={rating} onChange={(e) => setRating(Number(e.target.value))} />
+      <div className="space-y-2">
+        <Label htmlFor="rating">Rating (0–5)</Label>
+        <Input
+          id="rating"
+          type="number"
+          min={0}
+          max={5}
+          value={rating}
+          onChange={(e) => setRating(Number(e.target.value))}
+        />
       </div>
-      <div>
-        <label htmlFor='notes'>Notes</label>
-        <textarea id='notes' value={notes} onChange={(e) => setNotes(e.target.value)} />
+      <div className="space-y-2">
+        <Label htmlFor="notes">Notes</Label>
+        <Textarea
+          id="notes"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+        />
       </div>
-      <div>
-        <label htmlFor='purchaseDate'>Purchase date</label>
-        <input id='purchaseDate' type='date' value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)} />
+      <div className="space-y-2">
+        <Label htmlFor="purchaseDate">Purchase date</Label>
+        <Input
+          id="purchaseDate"
+          type="date"
+          value={purchaseDate}
+          onChange={(e) => setPurchaseDate(e.target.value)}
+        />
       </div>
-      <button type='submit'>{isEdit ? 'Save' : 'Add game'}</button>
-      {onCancel && (
-        <button type='button' onClick={onCancel}>
-          Cancel
-        </button>
-      )}
+      <div className="flex gap-2">
+        <Button type="submit">{isEdit ? 'Save' : 'Add game'}</Button>
+        {onCancel && (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
+      </div>
     </form>
   );
 }
