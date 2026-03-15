@@ -28,11 +28,37 @@ function App() {
   }
 
   return (
-    <>
-      <SearchBox value={searchQuery} onChange={setSearchQuery} />
-      <AddEditGameForm game={editingGame} onSave={handleSave} onCancel={() => setEditingGame(null)} />
-      <GameList games={filteredGames} onEdit={setEditingGame} onRemove={removeGame} />
-    </>
+    <div className="app">
+      <header className="app-header">
+        <div className="app-header-inner">
+          <h1 className="app-title">Game Library</h1>
+        </div>
+      </header>
+      <main className="app-main">
+        <div className="app-container">
+          <section className="app-section app-search">
+            <h2 className="app-section-title">Search</h2>
+            <SearchBox value={searchQuery} onChange={setSearchQuery} />
+          </section>
+          <section className="app-section app-form-wrapper">
+            <h2 className="app-section-title">{editingGame ? 'Edit game' : 'Add game'}</h2>
+            <AddEditGameForm
+              game={editingGame}
+              onSave={handleSave}
+              onCancel={() => setEditingGame(null)}
+            />
+          </section>
+          <section className="app-section app-list-section">
+            <h2 className="app-section-title">Your library</h2>
+            <GameList
+              games={filteredGames}
+              onEdit={setEditingGame}
+              onRemove={removeGame}
+            />
+          </section>
+        </div>
+      </main>
+    </div>
   );
 }
 
