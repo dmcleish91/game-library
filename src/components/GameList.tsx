@@ -79,7 +79,7 @@ function GameCard({ game, onEdit, onDelete }: GameCardProps) {
           </DropdownMenu>
         </div>
 
-        <div className='mt-3 flex items-center gap-2'>
+        <div className='mt-1.5 flex items-center gap-2'>
           <span className={cn('rounded-full px-2.5 py-1 text-xs font-medium', status.className)}>{status.label}</span>
           {game.rating > 0 && (
             <div className='flex items-center gap-1 text-primary'>
