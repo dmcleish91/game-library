@@ -50,7 +50,15 @@ function GameCard({ game, onEdit, onDelete }: GameCardProps) {
         <div className='flex items-start justify-between gap-3'>
           <div className='min-w-0 flex-1'>
             <h3 className='truncate text-base font-semibold text-foreground'>{game.title}</h3>
-            <p className='mt-0.5 text-sm text-muted-foreground'>{game.platform}</p>
+            <div className='mt-0.5 flex items-baseline gap-2 text-sm text-muted-foreground'>
+              <span className='shrink-0'>{game.platform}</span>
+              {game.notes && (
+                <>
+                  <span className='shrink-0 text-muted-foreground/70'>·</span>
+                  <span className='min-w-0 line-clamp-1 text-primary'>{game.notes}</span>
+                </>
+              )}
+            </div>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger
@@ -80,8 +88,6 @@ function GameCard({ game, onEdit, onDelete }: GameCardProps) {
             </div>
           )}
         </div>
-
-        {game.notes && <p className='mt-3 line-clamp-2 text-sm text-muted-foreground'>{game.notes}</p>}
       </div>
 
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
