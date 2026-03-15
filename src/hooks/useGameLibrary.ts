@@ -18,5 +18,8 @@ export function useGameLibrary() {
   function removeGame(id: string) {
     setGames((prev) => prev.filter((g) => g.id !== id));
   }
-  return { games, addGame, updateGame, removeGame };
+  function replaceGames(newGames: Game[]) {
+    setGames(newGames);
+  }
+  return { games, addGame, updateGame, removeGame, replaceGames };
 }

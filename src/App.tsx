@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useGameLibrary } from './hooks/useGameLibrary';
 import { GameHeader } from './components/GameHeader';
 import { SearchBox } from './components/SearchBox';
@@ -6,6 +6,7 @@ import { GameTabs } from './components/GameTabs';
 import { AddEditGameForm } from './components/AddEditGameForm';
 import { GameList } from './components/GameList';
 import { Game, GAME_STATUS, STATUS_OPTIONS, type GameStatus } from './lib/gameModel';
+import { getExportContent, downloadTextFile, parseExportedFile } from './lib/exportGames';
 import {
   Sheet,
   SheetContent,
@@ -14,7 +15,8 @@ import {
 } from './components/ui/sheet';
 
 function App() {
-  const { games, addGame, updateGame, removeGame } = useGameLibrary();
+  const { games, addGame, updateGame, removeGame, replaceGames } = useGameLibrary();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [editingGame, setEditingGame] = useState<Game | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | GameStatus>('all');
@@ -64,10 +66,47 @@ function App() {
     setSheetOpen(true);
   }
 
+  function handleExportClick() {
+    const text = getExportContent(games);
+    downloadTextFile(text, 'game-library.txt');
+  }
+
+  function handleImportClick() {
+    fileInputRef.current?.click();
+  }
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = typeof reader.result === 'string' ? reader.result : '';
+      const parsed = parseExportedFile(text);
+      if (parsed && parsed.length > 0) {
+        replaceGames(parsed);
+      }
+    };
+    reader.readAsText(file);
+  }
+
   return (
     <div className="flex min-h-svh flex-col bg-background">
+      <input
+        type="file"
+        ref={fileInputRef}
+        accept=".txt,text/plain"
+        className="hidden"
+        aria-hidden
+        onChange={handleFileChange}
+      />
       <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:max-w-5xl xl:max-w-6xl 2xl:max-w-7xl">
-        <GameHeader onAddClick={handleAddClick} />
+        <GameHeader
+          onAddClick={handleAddClick}
+          onExportClick={handleExportClick}
+          onImportClick={handleImportClick}
+          showImportButton={games.length === 0}
+        />
       </div>
       <Sheet
         open={sheetOpen}
