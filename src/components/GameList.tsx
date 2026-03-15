@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { Game } from '@/lib/gameModel';
 import { GAME_STATUS, type GameStatus } from '@/lib/gameModel';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,7 +11,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Gamepad2, MoreHorizontal, Star, Pencil, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Gamepad2, Star, Pencil, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const statusConfig: Record<GameStatus, { label: string; className: string }> = {
@@ -54,23 +54,26 @@ function GameCard({ game, onEdit, onDelete }: GameCardProps) {
               <span className='shrink-0 text-sm text-muted-foreground'>{game.platform}</span>
             </div>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className='inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border-0 bg-transparent text-muted-foreground hover:bg-accent hover:text-foreground'
-              aria-label='Open menu'>
-              <MoreHorizontal className='h-4 w-4' />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align='end' className='w-40'>
-              <DropdownMenuItem onClick={() => onEdit(game)}>
-                <Pencil className='mr-2 h-4 w-4' />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setShowDeleteDialog(true)} className='text-destructive focus:text-destructive'>
-                <Trash2 className='mr-2 h-4 w-4' />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className='flex shrink-0 items-center gap-1'>
+            <Button
+              type='button'
+              variant='ghost'
+              size='icon'
+              className='h-8 w-8 text-muted-foreground hover:text-foreground'
+              onClick={() => onEdit(game)}
+              aria-label='Edit game'>
+              <Pencil className='h-4 w-4' />
+            </Button>
+            <Button
+              type='button'
+              variant='ghost'
+              size='icon'
+              className='h-8 w-8 text-muted-foreground hover:text-destructive'
+              onClick={() => setShowDeleteDialog(true)}
+              aria-label='Delete game'>
+              <Trash2 className='h-4 w-4' />
+            </Button>
+          </div>
         </div>
 
         <div className='mt-2 flex flex-wrap items-center gap-x-2 gap-y-1'>
