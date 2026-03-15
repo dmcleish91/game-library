@@ -49,15 +49,9 @@ function GameCard({ game, onEdit, onDelete }: GameCardProps) {
       <div className='group relative overflow-hidden rounded-2xl bg-card p-4 transition-all active:scale-[0.98]'>
         <div className='flex items-start justify-between gap-3'>
           <div className='min-w-0 flex-1'>
-            <h3 className='truncate text-base font-semibold text-foreground'>{game.title}</h3>
-            <div className='mt-0.5 flex items-baseline gap-2 text-sm text-muted-foreground'>
-              <span className='shrink-0'>{game.platform}</span>
-              {game.notes && (
-                <>
-                  <span className='shrink-0 text-muted-foreground/70'>·</span>
-                  <span className='min-w-0 line-clamp-1 text-primary'>{game.notes}</span>
-                </>
-              )}
+            <div className='flex flex-wrap items-baseline gap-x-2 gap-y-0'>
+              <h3 className='truncate text-base font-semibold text-foreground'>{game.title}</h3>
+              <span className='shrink-0 text-sm text-muted-foreground'>{game.platform}</span>
             </div>
           </div>
           <DropdownMenu>
@@ -79,13 +73,16 @@ function GameCard({ game, onEdit, onDelete }: GameCardProps) {
           </DropdownMenu>
         </div>
 
-        <div className='mt-1.5 flex items-center gap-2'>
+        <div className='mt-2 flex flex-wrap items-center gap-x-2 gap-y-1'>
           <span className={cn('rounded-full px-2.5 py-1 text-xs font-medium', status.className)}>{status.label}</span>
           {game.rating > 0 && (
             <div className='flex items-center gap-1 text-primary'>
               <Star className='h-3.5 w-3.5 fill-current' />
               <span className='text-xs font-medium'>{game.rating}</span>
             </div>
+          )}
+          {game.notes && (
+            <span className='min-w-0 flex-1 truncate text-sm text-primary'>{game.notes}</span>
           )}
         </div>
       </div>
